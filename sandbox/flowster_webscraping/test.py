@@ -1,7 +1,15 @@
 from bs4 import BeautifulSoup
+import requests
 
-# Testing commits to flowster_webscraping branch
+sourceHTML = requests.get('https://forum.flowster.app/').text
 
-# Testing commits to flowster_webscraping branch 2
+soup = BeautifulSoup(sourceHTML, 'html.parser')
 
-# Testing commits to flowster_webscraping branch 3
+#print(soup.prettify())
+
+anchors = soup.find_all('a')
+
+for anchor in anchors:
+    print(anchor['href'])
+
+
