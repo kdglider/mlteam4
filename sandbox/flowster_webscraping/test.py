@@ -1,15 +1,20 @@
 from bs4 import BeautifulSoup
 import requests
 
-sourceHTML = requests.get('https://forum.flowster.app/').text
+baseURL = 'https://forum.flowster.app'
 
+# Get source HTML text and generate soup object
+sourceHTML = requests.get(baseURL).text
 soup = BeautifulSoup(sourceHTML, 'html.parser')
 
 #print(soup.prettify())
 
-anchors = soup.find_all('a')
+# Find all table cells that belong to the category class
+categoryCells = soup.find_all('td', class_='category')
 
-for anchor in anchors:
-    print(anchor['href'])
+href = categoryCells[0].div.h3.a['href']
 
+categoryPageURL = baseURL + href
+
+print(categoryPageURL)
 
