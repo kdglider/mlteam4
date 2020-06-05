@@ -12,6 +12,7 @@ topic_c=[]
 rest_c=[]
 
 def get_links(num_elem=None):
+#create the demanded num of links with a base provided
     access_url = soup.find_all('a')
     links = []
     for item in access_url:
@@ -21,7 +22,7 @@ def get_links(num_elem=None):
         return links
     return links[1:]
 
-#create a list of the urls of the first layer of categories
+#create a list that contains the urls of the first layer of categories
 category_link = get_links(12)
 
 for category in category_link:
