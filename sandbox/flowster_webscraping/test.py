@@ -3,22 +3,26 @@ from selenium import webdriver
 import requests
 import time
 
+# Local path to webdriver
+webdriverPath = r'C:\Users\kevin\Desktop\chromedriver_win32\chromedriver.exe'
+
+# Set up webdriver
+options = webdriver.ChromeOptions()
+options.add_argument('--ignore-certificate-errors')     # Ignore security certificates
+options.add_argument('--incognito')                     # Use Chrome in Incognito mode
+options.add_argument('--headless')                      # Run in background
+driver = webdriver.Chrome( \
+    executable_path = webdriverPath, \
+    options = options)
+
+# Flowster forum base URL
 baseURL = 'https://forum.flowster.app'
 
 # Open Chrome web client using Selenium and retrieve page source
-options = webdriver.ChromeOptions()
-options.add_argument('--ignore-certificate-errors')
-options.add_argument('--incognito')
-options.add_argument('--headless')
-driver = webdriver.Chrome( \
-    executable_path = r'C:\Users\kevin\Desktop\chromedriver_win32\chromedriver.exe', \
-    chrome_options = options)
-
 driver.get(baseURL)
 baseHTML = driver.page_source
 
 # Get base HTML text and generate soup object
-#baseHTML = requests.get(baseURL).text
 baseSoup = BeautifulSoup(baseHTML, 'html.parser')
 
 #print(baseSoup.prettify())
@@ -94,23 +98,4 @@ for i in range(1, len(postDivs)):
     print('Post ' + str(i) + ': ' + '\n' + post + '\n')
 
 
-''' Non-Selenium Implementation
-# Find all table cells that belong to the category class
-categoryCells = baseSoup.find_all('td', class_='category')
 
-# Get hyperlink reference and append it to the base URL to get the category page URL
-href = categoryCells[0].div.h3.a['href']
-categoryPageURL = baseURL + href
-
-print(categoryPageURL)
-
-# Get category HTML text and generate soup object
-categoryHTML = requests.get(categoryPageURL).text
-categorySoup = BeautifulSoup(categoryHTML, 'html.parser')
-
-topicCells = categorySoup.find_all('td', class_='main-link')
-
-for topic in topicCells:
-    href = topic.a['href']
-    print(href)
-'''
