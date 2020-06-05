@@ -30,10 +30,9 @@ categoryAnchors = baseSoup.find_all('a', class_='category-title-link')
 href = categoryAnchors[0]['href']
 categoryPageURL = baseURL + href
 
-print(categoryPageURL)
-
 # Get category HTML text
 driver.get(categoryPageURL)
+
 
 # Load the entire webage by scrolling
 lastHeight = driver.execute_script("return document.body.scrollHeight")
@@ -49,6 +48,7 @@ while (True):
     if newHeight == lastHeight:
         break
     lastHeight = newHeight
+
 
 # Generate soup object
 categoryHTML = driver.page_source
@@ -68,24 +68,31 @@ topicSoup = BeautifulSoup(topicHTML, 'html.parser')
 
 # Get topic name
 topicName = topicSoup.find('a', class_='fancy-title').text
-print(topicName)
+print('Topic Name: ' + topicName)
 
 # Get topic category and tags
 topicCategoryDiv = topicSoup.find('div', class_='topic-category ember-view')
-
 tagAnchors = topicCategoryDiv.find_all('span', class_='category-name')
 
-for anchor in tagAnchors:
-    print(anchor.text)
+print('Topic Category: ' + tagAnchors[0].text)
+
+for i in range(1, len(tagAnchors)):
+    print('Tag ' + str(i) + ': '+ tagAnchors[i].text)
 
 
+# Get topic author and posts
+postStream = topicSoup.find('div', class_='post-stream')
+postDivs = postStream.find_all('div', recursive=False)
 
+author = postDivs[0].find('span', class_='first username').a.text
+firstPost = postDivs[0].find('div', class_='cooked').text
+print('Author: ' + author)
+print('First Post: ' + '\n' + firstPost + '\n')
 
-'''
-for topic in topicAnchors:
-    href = topic['href']
-    print(href)
-'''
+for i in range(1, len(postDivs)):
+    post = postDivs[i].find('div', class_='cooked').text
+    print('Post ' + str(i) + ': ' + '\n' + post + '\n')
+
 
 ''' Non-Selenium Implementation
 # Find all table cells that belong to the category class
