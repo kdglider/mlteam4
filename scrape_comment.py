@@ -15,22 +15,33 @@ soup = BeautifulSoup(response.text, 'html.parser')
 
 print(soup.prettify())
 
+body = soup.find('body')
+# get post title
+post_title = body.find_all('h1')[0].find('a').getText()
+
+category_name = body.find('span').getText()
+
 creators = soup.findAll(class_="creator")
 comments = soup.findAll(class_="post")
+
+post_author = creators[0].find('a').getText()
+leading_comment = comments[0].getText()
 
 creator_arr=[];
 dates_arr=[];
 comments_arr=[];
 
-for creator in creators:
-  creator_arr.append((creator.getText()))
+# get authors of replies
+for creator in creators[1:]:
+  creator_arr.append(creator.find('a').getText())
 
 
 for x in creator_arr:
   print(x)
 
-for comment in comments:
-  comments_arr.append((comment.getText()))
+# get contents of replies
+for comment in comments[1:]:
+  comments_arr.append(comment.getText())
 
 
 
