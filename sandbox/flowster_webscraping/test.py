@@ -53,6 +53,9 @@ def get_author_and_commenters(topicSoup):
     for name in names:
         author = name.span.a.text
         authorList.append(author)
+    
+    # Remove redundant names
+    authorList = list(set(authorList))
 
     if (len(authorList) == 1):
         author = authorList[0]
@@ -82,8 +85,6 @@ def get_comments(topicSoup):
         leadingComment = comments[0]
         otherComments = comments[1:]
         return leadingComment, otherComments
-    
-
 
 
 def get_views(topicSoup):
@@ -92,6 +93,7 @@ def get_views(topicSoup):
         return str(0)
     return views.span.text
     
+
 def get_likes(topicSoup):
     likes = topicSoup.find('li', class_='secondary likes')
     if likes == None:
@@ -135,6 +137,8 @@ if __name__=='__main__':
         categoryPageURLs.append(baseURL + href)
 
 
+    topicDict = {}
+
     #1st for_loop ro run through all categories
     for categoryURL in categoryPageURLs:
         # Get category HTML text
@@ -171,8 +175,6 @@ if __name__=='__main__':
             topicPageURLs.append(baseURL + href)
 
 
-        topicDict = {}
-
         # 2nd for loop to run through all topics
         for topicURL in topicPageURLs:
             # Get category HTML text and generate soup object
@@ -188,42 +190,19 @@ if __name__=='__main__':
             numLikes = get_likes(topicSoup)
             numViews = get_views(topicSoup)
 
-            '''
-            attributeDict = {
-                'Topic Title' : topicTitle,
-                'Category'      :   category,
-                'Author'        :   author,
-                'Commenters'}
-
-            for j in range(0, len(topicPageURLs)):
-                url = topicPageURLs[j]
-                
-                single_dict = dictionary_combination(url)
-                final_dict.update(single_dict)
-                #print(j)
-                
-            #print(final_dict)
-
-            with open('Flowster_Dict.json', 'w') as f:
-                json.dump(final_dict, f)
             
-
-            result_df = pd.DataFrame(columns=['Topic Title', 'Category', 'Tags', 'Authors', 'Leading Comment', 'Other Comments'])
-
-
-
-            ## get other topic contents and append to dataframe:
-            for j in range(0, len(topicPageURLs)):
-                url = topicPageURLs[j]
-                result_df = result_df.append({'Topic Title': topic_title2(url), 
-                                            'Category': category2(url),
-                                            'Tags': tag2(url), 
-                                            'Authors': author2(url), 
-                                            'Leading Comment': leading_comment2(url), 
-                                            'Other Comments': other_comment2(url)}, ignore_index=True)
-
-            result_df.to_csv('flowster_data.csv')
-            '''
+            attributeDict = {
+                'Topic Title'       :   topicTitle,
+                'Category'          :   category,
+                'Tags'              :   tags,
+                'Author'            :   author,
+                'Commenters'        :   commenters,
+                'Leading Comment'   :   leadingComment,
+                'Other Comments'    :   otherComments,
+                'Likes'             :   numLikes,
+                'Views'             :   numViews}
+            
+            topicDict[topicTitle] = attributeDict
 
             '''
             print('Topic Title:')
@@ -241,18 +220,49 @@ if __name__=='__main__':
             print('Commenters:')
             print(commenters)
 
-            print('Leading Comment')
+            print('Leading Comment:')
             print(leadingComment)
             
-            print('Other Comments')
+            print('Other Comments:')
             print(otherComments)
 
-            print('Likes')
+            print('Likes:')
             print(numLikes)
 
-            print('Views')
+            print('Views:')
             print(numViews)
             '''
+    
+
+    with open('test.json', 'w') as f:
+        json.dump(topicDict, f)
+
+
+    '''
+    result_df = pd.DataFrame(columns=[
+        'Topic Title', 
+        'Category', 
+        'Tags', 
+        'Author', 
+        'Commenters',
+        'Leading Comment', 
+        'Other Comments',
+        'Likes',
+        'Views'])
+
+    ## get other topic contents and append to dataframe:
+    for j in range(0, len(topicPageURLs)):
+        url = topicPageURLs[j]
+        result_df = result_df.append({'Topic Title': topic_title2(url), 
+                                    'Category': category2(url),
+                                    'Tags': tag2(url), 
+                                    'Authors': author2(url), 
+                                    'Leading Comment': leading_comment2(url), 
+                                    'Other Comments': other_comment2(url)}, ignore_index=True)
+
+    result_df.to_csv('flowster_data.csv')
+    '''
+    
 
   
 
