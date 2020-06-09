@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 
 import time
+from datetime import datetime
 
 import pandas as pd
 import json
@@ -26,6 +27,9 @@ def get_otherc(topicSoup):
 
 def get_title(topicSoup):
     topicName = topicSoup.find('a', class_='fancy-title').text
+
+    # Remove leading and trailing spaces and newlines
+    topicName = topicName.replace('\n', '').strip()
     return topicName
 
 
@@ -135,9 +139,21 @@ if __name__=='__main__':
     for i in range(len(categoryAnchors)):
         href = categoryAnchors[i]['href']
         categoryPageURLs.append(baseURL + href)
+    
+    categoryPageURLs = [categoryPageURLs[0]]
 
-
+    # Set up both a dictionary and Pandas dataframe to save data to
     topicDict = {}
+    topicDataframe = pd.DataFrame(columns=[
+        'Topic Title', 
+        'Category', 
+        'Tags', 
+        'Author', 
+        'Commenters',
+        'Leading Comment', 
+        'Other Comments',
+        'Likes',
+        'Views'])
 
     #1st for_loop ro run through all categories
     for categoryURL in categoryPageURLs:
@@ -204,6 +220,8 @@ if __name__=='__main__':
             
             topicDict[topicTitle] = attributeDict
 
+            topicDataframe = topicDataframe.append(attributeDict, ignore_index=True)
+
             '''
             print('Topic Title:')
             print(topicTitle)
@@ -234,34 +252,12 @@ if __name__=='__main__':
             '''
     
 
-    with open('test.json', 'w') as f:
+    timeStamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    with open('Flowster_Topic_Attributes_' + timeStamp + '.json', 'w') as f:
         json.dump(topicDict, f)
 
-
-    '''
-    result_df = pd.DataFrame(columns=[
-        'Topic Title', 
-        'Category', 
-        'Tags', 
-        'Author', 
-        'Commenters',
-        'Leading Comment', 
-        'Other Comments',
-        'Likes',
-        'Views'])
-
-    ## get other topic contents and append to dataframe:
-    for j in range(0, len(topicPageURLs)):
-        url = topicPageURLs[j]
-        result_df = result_df.append({'Topic Title': topic_title2(url), 
-                                    'Category': category2(url),
-                                    'Tags': tag2(url), 
-                                    'Authors': author2(url), 
-                                    'Leading Comment': leading_comment2(url), 
-                                    'Other Comments': other_comment2(url)}, ignore_index=True)
-
-    result_df.to_csv('flowster_data.csv')
-    '''
+    topicDataframe.to_csv('Flowster_Topic_Attributes_' + timeStamp + '.csv')
+    
     
 
   
