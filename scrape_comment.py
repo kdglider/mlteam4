@@ -2,8 +2,10 @@ import numpy as np
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
+import csv
 
-from scraping_amazon import df_post
+
+
 
 #this method returns the category aka the tag of the webpage
 def get_category():
