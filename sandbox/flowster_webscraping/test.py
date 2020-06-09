@@ -6,6 +6,7 @@ import pandas
 
 
 #####Functions:#####
+'''
 def get_leadc(topicSoup):
     for c in topicSoup.find_all('meta', property='og:description'):
         leadc = c.get('content')
@@ -19,33 +20,47 @@ def get_otherc(topicSoup):
         post = postDivs[i].find('div', class_='cooked').text
         otherc.append(post)
     return otherc
+'''
+
+def get_comments(topicSoup):
+    postStream = topicSoup.find('div', class_='post-stream')
+    postDivs = postStream.find_all('div', {'class':['topic-post clearfix regular','topic-post clearfix topic-owner regular']})
+    comments = []
+    for i in range(1, len(postDivs)):
+        comment = postDivs[i].find('div', class_='cooked').text
+        comments.append(comment)
+    leadingComment = comments[0]
+    otherComments = comments[1:]
+    return leadingComment, otherComments
     
-def get_tags(topicSoup):
+def get_category_and_tags(topicSoup):
     temp_tag = []
     for n in topicSoup.find_all('span', class_="category-name"):
         temp_tag.append(n.getText())
-    return temp_tag
+    return temp_tag[0], temp_tag[1:]
 
 def get_title(topicSoup):
-    for i in topicSoup.find_all("meta", property="og:title"):
-        topic = i.get("content")
-        return topic
+    topicName = topicSoup.find('a', class_='fancy-title').text
+    return topicName
     
-def get_author(topicSoup):
+def get_author_and_commenters(topicSoup):
     names = topicSoup.find_all("span", class_="creator")
-    author = names[0].getText()
-    return author
+    authorList=[]
+    for name in names:
+        name = a.getText()
+        authorList.append(name.strip())
+    return authorList[0], authorList[1:]
 
 def get_views(topicSoup):
     views = topicSoup.find('li', class_='secondary views')
     if views == None:
-        return 0
+        return str(0)
     return views.span.text
     
 def get_likes(topicSoup):
     likes = topicSoup.find('li', class_='secondary likes')
     if likes == None:
-        return 0
+        return str(0)
     return likes.span.text
 
 
