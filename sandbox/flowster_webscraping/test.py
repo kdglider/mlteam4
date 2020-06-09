@@ -1,8 +1,10 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
-import requests
+
 import time
-import pandas
+
+import pandas as pd
+import json
 
 
 #####Functions:#####
@@ -22,34 +24,67 @@ def get_otherc(topicSoup):
     return otherc
 '''
 
-def get_comments(topicSoup):
-    postStream = topicSoup.find('div', class_='post-stream')
-    postDivs = postStream.find_all('div', {'class':['topic-post clearfix regular','topic-post clearfix topic-owner regular']})
-    comments = []
-    for i in range(1, len(postDivs)):
-        comment = postDivs[i].find('div', class_='cooked').text
-        comments.append(comment)
-    leadingComment = comments[0]
-    otherComments = comments[1:]
-    return leadingComment, otherComments
-    
-def get_category_and_tags(topicSoup):
-    temp_tag = []
-    for n in topicSoup.find_all('span', class_="category-name"):
-        temp_tag.append(n.getText())
-    return temp_tag[0], temp_tag[1:]
-
 def get_title(topicSoup):
     topicName = topicSoup.find('a', class_='fancy-title').text
     return topicName
+
+
+def get_category_and_tags(topicSoup):    
+    topicCategoryDiv = topicSoup.find('div', class_='topic-category ember-view')
+    tagAnchors = topicCategoryDiv.find_all('span', class_='category-name')
+
+    tagList = []
+    for anchor in tagAnchors:
+        tagList.append(anchor.text)
+    
+    if (len(tagList) == 1):
+        category = tagList[0]
+        tags = []
+        return category, tags
+    else:
+        category = tagList[0]
+        tags = tagList[1:]
+        return category, tags
+
     
 def get_author_and_commenters(topicSoup):
-    names = topicSoup.find_all("span", class_="creator")
-    authorList=[]
+    names = topicSoup.find_all("div", class_="names trigger-user-card")
+    authorList = []
     for name in names:
-        name = a.getText()
-        authorList.append(name.strip())
-    return authorList[0], authorList[1:]
+        author = name.span.a.text
+        authorList.append(author)
+
+    if (len(authorList) == 1):
+        author = authorList[0]
+        commenters = []
+        return author, commenters
+    else:
+        author = authorList[0]
+        commenters = authorList[1:]
+        return author, commenters
+
+
+def get_comments(topicSoup):
+    postStream = topicSoup.find('div', class_='post-stream')
+    postDivs = postStream.find_all('div', \
+        {'class':['topic-post clearfix regular','topic-post clearfix topic-owner regular']})
+
+    comments = []
+    for i in range(len(postDivs)):
+        comment = postDivs[i].find('div', class_='cooked').text
+        comments.append(comment)
+    
+    if (len(comments) == 1):
+        leadingComment = comments[0]
+        otherComments = []
+        return leadingComment, otherComments
+    else:
+        leadingComment = comments[0]
+        otherComments = comments[1:]
+        return leadingComment, otherComments
+    
+
+
 
 def get_views(topicSoup):
     views = topicSoup.find('li', class_='secondary views')
@@ -65,7 +100,7 @@ def get_likes(topicSoup):
 
 
 
-if __name__=='main':
+if __name__=='__main__':
     # Local path to webdriver
     webdriverPath = r'C:\Users\kevin\Desktop\chromedriver_win32\chromedriver.exe'
 
@@ -136,6 +171,8 @@ if __name__=='main':
             topicPageURLs.append(baseURL + href)
 
 
+        topicDict = {}
+
         # 2nd for loop to run through all topics
         for topicURL in topicPageURLs:
             # Get category HTML text and generate soup object
@@ -143,32 +180,81 @@ if __name__=='main':
             topicHTML = driver.page_source
             topicSoup = BeautifulSoup(topicHTML, 'html.parser')
 
-            # Get topic name
-            topicName = topicSoup.find('a', class_='fancy-title').text
-            print('Topic Name: ' + topicName)
+            # Scape all topic attributes of interest
+            topicTitle = get_title(topicSoup)
+            category, tags = get_category_and_tags(topicSoup)
+            author, commenters = get_author_and_commenters(topicSoup)
+            leadingComment, otherComments = get_comments(topicSoup)
+            numLikes = get_likes(topicSoup)
+            numViews = get_views(topicSoup)
 
-            # Get topic category and tags
-            topicCategoryDiv = topicSoup.find('div', class_='topic-category ember-view')
-            tagAnchors = topicCategoryDiv.find_all('span', class_='category-name')
+            '''
+            attributeDict = {
+                'Topic Title' : topicTitle,
+                'Category'      :   category,
+                'Author'        :   author,
+                'Commenters'}
 
-            print('Topic Category: ' + tagAnchors[0].text)
+            for j in range(0, len(topicPageURLs)):
+                url = topicPageURLs[j]
+                
+                single_dict = dictionary_combination(url)
+                final_dict.update(single_dict)
+                #print(j)
+                
+            #print(final_dict)
 
-            for i in range(1, len(tagAnchors)):
-                print('Tag ' + str(i) + ': '+ tagAnchors[i].text)
+            with open('Flowster_Dict.json', 'w') as f:
+                json.dump(final_dict, f)
+            
+
+            result_df = pd.DataFrame(columns=['Topic Title', 'Category', 'Tags', 'Authors', 'Leading Comment', 'Other Comments'])
 
 
-            # Get topic author and posts
-            postStream = topicSoup.find('div', class_='post-stream')
-            postDivs = postStream.find_all('div', recursive=False)
 
-            author = postDivs[0].find('span', class_='first username').a.text
-            firstPost = postDivs[0].find('div', class_='cooked').text
-            print('Author: ' + author)
-            print('First Post: ' + '\n' + firstPost + '\n')
+            ## get other topic contents and append to dataframe:
+            for j in range(0, len(topicPageURLs)):
+                url = topicPageURLs[j]
+                result_df = result_df.append({'Topic Title': topic_title2(url), 
+                                            'Category': category2(url),
+                                            'Tags': tag2(url), 
+                                            'Authors': author2(url), 
+                                            'Leading Comment': leading_comment2(url), 
+                                            'Other Comments': other_comment2(url)}, ignore_index=True)
 
-            for i in range(1, len(postDivs)):
-                post = postDivs[i].find('div', class_='cooked').text
-                print('Post ' + str(i) + ': ' + '\n' + post + '\n')
+            result_df.to_csv('flowster_data.csv')
+            '''
+
+            '''
+            print('Topic Title:')
+            print(topicTitle)
+
+            print('Category:')
+            print(category)
+
+            print('Tags:')
+            print(tags)
+
+            print('Author:')
+            print(author)
+
+            print('Commenters:')
+            print(commenters)
+
+            print('Leading Comment')
+            print(leadingComment)
+            
+            print('Other Comments')
+            print(otherComments)
+
+            print('Likes')
+            print(numLikes)
+
+            print('Views')
+            print(numViews)
+            '''
+
+  
 
 
 
