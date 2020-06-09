@@ -4,11 +4,12 @@
 @brief      Class to scrape attributes of interest from all topics on the Flowster Discourse forum
 '''
 
-from bs4 import BeautifulSoup
-from selenium import webdriver
-
 import time
 from datetime import datetime
+import os
+
+from bs4 import BeautifulSoup
+from selenium import webdriver
 
 import pandas as pd
 import json
