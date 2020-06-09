@@ -3,16 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 
-
-response = requests.get('https://sellercentral.amazon.com/forums/t/shipping/639627')
-
-if response: 
-  print('Success!')
-else:
-  print('An error has occurred.')   
-
-soup = BeautifulSoup(response.text, 'html.parser')
-
+from scraping_amazon import df_post
 
 #this method returns the category aka the tag of the webpage
 def get_category():
@@ -74,3 +65,20 @@ def get_reply_times():
     for time in times[1:]:
         reply_times.append(time.getText())
     return reply_times
+
+
+row_list= []
+i = 0
+for link in df_post['post_link']:
+  try:
+    response = requests.get(link)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    curr_row = {'Link': link, 'Title':get_post_title(), 'Category':get_category(), 'Post Author':get_post_author(), 'Leading Comment':get_leading_comment(), 'Publish Time':get_published_time(), 'Reply Authors':get_reply_authors, 'Reply Comments':get_reply_comments(), 'Reply Times':get_reply_times()}
+    row_list.append(curr_row)
+    i=i+1
+    if(i%10==0):print(i)
+  except AttributeError:
+    continue
+
+scraped_data = pd.DataFrame(row_list)
+scraped_data.to_csv('amazon_scraped_data.csv')
