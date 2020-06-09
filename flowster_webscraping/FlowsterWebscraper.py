@@ -277,11 +277,17 @@ class FlowsterWebscraper:
         # Get unique timestamp of the webscraping
         timeStamp = datetime.now().strftime('%Y%m%d%H%M%S')
 
-        # Save data in JSON and CSV files
-        with open('Flowster_Topic_Attributes_' + timeStamp + '.json', 'w') as f:
+        # Save data in JSON and CSV files and store in the save folder as this program
+        jsonFilename = 'Flowster_Topic_Attributes_' + timeStamp + '.json'
+        csvFilename = 'Flowster_Topic_Attributes_' + timeStamp + '.csv'
+
+        jsonFileFullPath = os.path.join(os.path.dirname(os.path.realpath(__file__)), jsonFilename)
+        csvFileFullPath = os.path.join(os.path.dirname(os.path.realpath(__file__)), csvFilename)
+
+        with open(jsonFileFullPath, 'w') as f:
             json.dump(self.topicDict, f)
 
-        self.topicDataframe.to_csv('Flowster_Topic_Attributes_' + timeStamp + '.csv')
+        self.topicDataframe.to_csv(csvFileFullPath)
 
 
 
@@ -298,11 +304,7 @@ if __name__=='__main__':
     # Run webscraping and save data
     flowsterWebscraper.runApplication(baseURL)
 
+
     
     
     
-
-  
-
-
-
