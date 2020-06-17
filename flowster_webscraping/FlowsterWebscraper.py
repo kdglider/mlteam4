@@ -297,6 +297,7 @@ if __name__=='__main__':
 
     # Flowster forum base URL
     baseURL = 'https://forum.flowster.app'
+    baseURL = 'https://sellercentral.amazon.com/forums/'
 
     # Create FLowster webscraping object
     flowsterWebscraper = FlowsterWebscraper(webdriverPath)
