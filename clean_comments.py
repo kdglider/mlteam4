@@ -11,7 +11,7 @@ import string
 
 stop_words = set(stopwords.words('english'))
 punct = set(string.punctuation)
-stemmer = PorterStemmer()
+votes = PorterVotes ()
 
 
 def text_cleaning(text):
