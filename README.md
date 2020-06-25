@@ -1,10 +1,16 @@
-# team4mlproject
-STEMAway Team 4 ML Project for June 2020
+# Advanced modeling branch
 
-**NB: Tips** 
-- Add all **resources** in **resources folder** according to category (to make it easier for us)
-- The **assets folder** is where you put **images** or anything you will need for your notebooks to link to.
-- When you commit please remember to add the -m (for message) to tell us what that commit is all about.
-- Try to document (comment) your code as much as possible.
+## General Guidelines for the branch
 
-Thank you :) 
+- Use the `dataset` folder to store the merged data.
+- Use the `model_nbs` folder to push the different notebooks you worked on by following this formate:
+    `Name_of_the_task[Name_of_the_contributor].ipynb`  
+
+- Use the `assets` folder if you want to store an image used in one of your notebooks.
+
+## General Guidelines for the notebooks
+
+- Comment your code as much as you can
+- Use markdown to highlight your findings
+- Use tables (pandas dataframes) to store your results
+- Use `classification_report` and `F1 measure` (better use: [F1TP, FP, FN](https://sebastianraschka.com/faq/docs/computing-the-f1-score.html))
