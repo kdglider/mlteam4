@@ -1,4 +1,4 @@
-# Advanced modeling branch
+# Advanced Modeling Branch
 
 ## General Guidelines for the branch
 
