@@ -2,7 +2,7 @@
 
 ## General Guidelines for the branch
 
-- Use the `dataset` folder to store the merged data.
+- Use the `datasets` folder to store the merged data.
 - Use the `model_nbs` folder to push the different notebooks you worked on by following this formate:
     `Name_of_the_task[Name_of_the_contributor].ipynb`  
 
