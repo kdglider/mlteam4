@@ -1,16 +1,22 @@
-# Advanced Modeling Branch
+# Machine Learning Team 4
 
-## General Guidelines for the branch
+**Period:** June 2020
+**What:** Virtual Internship at STEMAway
 
-- Use the `dataset` folder to store the merged data.
-- Use the `model_nbs` folder to push the different notebooks you worked on by following this formate:
-    `Name_of_the_task[Name_of_the_contributor].ipynb`  
+## About Team 4
 
-- Use the `assets` folder if you want to store an image used in one of your notebooks.
-
-## General Guidelines for the notebooks
-
-- Comment your code as much as you can
-- Use markdown to highlight your findings
-- Use tables (pandas dataframes) to store your results
-- Use `classification_report` and `F1 measure` (better use: [F1TP, FP, FN](https://sebastianraschka.com/faq/docs/computing-the-f1-score.html))
+Project Lead: @Sara_El-Ateif
+PM Lead: @rohit
+Participant: @kdglider
+Participant: @Gabriel_Jai
+Participant: @yeszoey
+Participant: @Khushali_Verma
+Participant: @ananya_de
+Participant: @mahmed51
+Participant: @Kitty_Gu
+Participant: @whuang19
+Observer: @Shalini_Kumari
+Observer: @WillP
+Observer: @Merron_Tecleab
+Observer: @fxc2000
+17 interns : 2 lead, 8 participants, 4 observers
