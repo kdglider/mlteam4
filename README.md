@@ -19,6 +19,18 @@ Observer: @Shalini_Kumari
 Observer: @WillP  
 Observer: @Merron_Tecleab  
 Observer: @fxc2000  
-14 interns : 2 lead, 8 participants, 4 observers  
+14 interns : 2 lead, 8 participants, 4 observers 
+
+## Goal of the project
+
+Classify a given post from a specific forum from the E-commerce DiscourseHub Community into its appropriate category.
+
+## Project Workflow
+
+![ML Team 4 project workflow](assets/ML_team4_project_workflow.png)
+
+## Presentation that summarizes our work
+
+Please checkout our work following [this presentation link](https://docs.google.com/presentation/d/1ddxR9e26OegIKwxpr0FbCGO8kl1JpjtfPwrybG2jhX8/edit?usp=sharingp
 
 
