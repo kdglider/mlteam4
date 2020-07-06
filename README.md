@@ -41,5 +41,5 @@ Classify a given post from a specific forum from the E-commerce DiscourseHub Com
 
 ## Presentation that summarizes our work
 
-Please checkout our work following [this presentation link](https://docs.google.com/presentation/d/1ddxR9e26OegIKwxpr0FbCGO8kl1JpjtfPwrybG2jhX8/edit?usp=sharingp)
+Please checkout our work following [the presentation link](https://docs.google.com/presentation/d/1ddxR9e26OegIKwxpr0FbCGO8kl1JpjtfPwrybG2jhX8/edit?usp=sharingp).  
 You will find the pdf version in the assets folder as well.
