@@ -19,4 +19,6 @@ Observer: @Shalini_Kumari
 Observer: @WillP  
 Observer: @Merron_Tecleab  
 Observer: @fxc2000  
-17 interns : 2 lead, 8 participants, 4 observers  
+14 interns : 2 lead, 8 participants, 4 observers  
+
+
